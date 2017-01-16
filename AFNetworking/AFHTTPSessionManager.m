@@ -24,15 +24,15 @@
 #import "AFURLRequestSerialization.h"
 #import "AFURLResponseSerialization.h"
 
-#import <Availability.h>
-#import <TargetConditionals.h>
-#import <Security/Security.h>
+#import <Availability.h> //mrp: watchOS的库
+#import <TargetConditionals.h> //mrp: watchOS的库
+#import <Security/Security.h> //mrp: watchOS的库
 
-#import <netinet/in.h>
-#import <netinet6/in6.h>
-#import <arpa/inet.h>
-#import <ifaddrs.h>
-#import <netdb.h>
+#import <netinet/in.h> //mrp: watchOS的库
+#import <netinet6/in6.h> //mrp: watchOS的库
+#import <arpa/inet.h> //mrp: watchOS的库
+#import <ifaddrs.h> //mrp: watchOS的库
+#import <netdb.h> //mrp: watchOS的库
 
 #if TARGET_OS_IOS || TARGET_OS_TV
 #import <UIKit/UIKit.h>
@@ -47,7 +47,7 @@
 @implementation AFHTTPSessionManager
 @dynamic responseSerializer;
 
-+ (instancetype)manager {
++ (instancetype)manager { //mrp: 注意这里不是单例
     return [[[self class] alloc] initWithBaseURL:nil];
 }
 
@@ -101,7 +101,7 @@
 @dynamic securityPolicy;
 
 - (void)setSecurityPolicy:(AFSecurityPolicy *)securityPolicy {
-    if (securityPolicy.SSLPinningMode != AFSSLPinningModeNone && ![self.baseURL.scheme isEqualToString:@"https"]) {
+    if (securityPolicy.SSLPinningMode != AFSSLPinningModeNone && ![self.baseURL.scheme isEqualToString:@"https"]) { //mrp: https错误检查
         NSString *pinningMode = @"Unknown Pinning Mode";
         switch (securityPolicy.SSLPinningMode) {
             case AFSSLPinningModeNone:        pinningMode = @"AFSSLPinningModeNone"; break;
@@ -210,7 +210,7 @@
 
         return nil;
     }
-
+    //mrp: 这里竟然用的是uploadTask，要注意！（其它请求方式大多是dataTask）
     __block NSURLSessionDataTask *task = [self uploadTaskWithStreamedRequest:request progress:uploadProgress completionHandler:^(NSURLResponse * __unused response, id responseObject, NSError *error) {
         if (error) {
             if (failure) {
