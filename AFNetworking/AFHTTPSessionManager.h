@@ -23,12 +23,12 @@
 #if !TARGET_OS_WATCH
 #import <SystemConfiguration/SystemConfiguration.h>
 #endif
-#import <TargetConditionals.h>
+#import <TargetConditionals.h>////mrp: watchOS的库
 
 #if TARGET_OS_IOS || TARGET_OS_WATCH || TARGET_OS_TV
-#import <MobileCoreServices/MobileCoreServices.h>
+#import <MobileCoreServices/MobileCoreServices.h>//mrp: watchOS的库
 #else
-#import <CoreServices/CoreServices.h>
+#import <CoreServices/CoreServices.h>//mrp: macOS的库
 #endif
 
 #import "AFURLSessionManager.h"
@@ -38,12 +38,12 @@
 
  ## Subclassing Notes
 
- Developers targeting iOS 7 or Mac OS X 10.9 or later that deal extensively with a web service are encouraged to subclass `AFHTTPSessionManager`, providing a class method that returns a shared singleton object on which authentication and other configuration can be shared across the application.
+ Developers targeting iOS 7 or Mac OS X 10.9 or later that deal extensively with a web service are encouraged to subclass `AFHTTPSessionManager`, providing a class method that returns a shared singleton object on which authentication and other configuration can be shared across the application.  //mrp: 对于iOS7及以后的的系统，AF鼓励我们继承‘AFHTTPSessionManager’，提供一个类方法返回共享的单例对象，这个对象配置了授权及其他相关的可以在全局使用的配置信息。
 
- For developers targeting iOS 6 or Mac OS X 10.8 or earlier, `AFHTTPRequestOperationManager` may be used to similar effect.
+ For developers targeting iOS 6 or Mac OS X 10.8 or earlier, `AFHTTPRequestOperationManager` may be used to similar effect.  //mrp: iOS6上‘AFHTTPRequestOperationManager’有相似的效果。
 
  ## Methods to Override
-
+//mrp: et al表示等人、等物的意思，在下面这句话里表示‘GET’、‘POST’等方法。
  To change the behavior of all data task operation construction, which is also used in the `GET` / `POST` / et al. convenience methods, override `dataTaskWithRequest:completionHandler:`.
 
  ## Serialization
@@ -61,9 +61,9 @@
     NSURL *baseURL = [NSURL URLWithString:@"http://example.com/v1/"];
     [NSURL URLWithString:@"foo" relativeToURL:baseURL];                  // http://example.com/v1/foo
     [NSURL URLWithString:@"foo?bar=baz" relativeToURL:baseURL];          // http://example.com/v1/foo?bar=baz
-    [NSURL URLWithString:@"/foo" relativeToURL:baseURL];                 // http://example.com/foo
+    [NSURL URLWithString:@"/foo" relativeToURL:baseURL];                 // http://example.com/foo  //mrp: 注意这里少了v1
     [NSURL URLWithString:@"foo/" relativeToURL:baseURL];                 // http://example.com/v1/foo
-    [NSURL URLWithString:@"/foo/" relativeToURL:baseURL];                // http://example.com/foo/
+    [NSURL URLWithString:@"/foo/" relativeToURL:baseURL];                // http://example.com/foo/ //mrp: 注意这里少了v1。规律：左边加斜杠（leading slash），则url由host+参数拼成。
     [NSURL URLWithString:@"http://example2.com/" relativeToURL:baseURL]; // http://example2.com/
 
  Also important to note is that a trailing slash will be added to any `baseURL` without one. This would otherwise cause unexpected behavior when constructing URLs using paths without a leading slash.
@@ -88,7 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) AFHTTPRequestSerializer <AFURLRequestSerialization> * requestSerializer;
 
 /**
- Responses sent from the server in data tasks created with `dataTaskWithRequest:success:failure:` and run using the `GET` / `POST` / et al. convenience methods are automatically validated and serialized by the response serializer. By default, this property is set to an instance of `AFJSONResponseSerializer`.
+ Responses sent from the server in data tasks created with `dataTaskWithRequest:success:failure:` and run using the `GET` / `POST` / et al. convenience methods are automatically validated and serialized by the response serializer. By default, this property is set to an instance of `AFJSONResponseSerializer`. //mrp: 注意默认是‘AFJSONResponseSerializer’
 
  @warning `responseSerializer` must not be `nil`.
  */
@@ -123,7 +123,7 @@ NS_ASSUME_NONNULL_BEGIN
  @return The newly-initialized HTTP client
  */
 - (instancetype)initWithBaseURL:(nullable NSURL *)url
-           sessionConfiguration:(nullable NSURLSessionConfiguration *)configuration NS_DESIGNATED_INITIALIZER;
+           sessionConfiguration:(nullable NSURLSessionConfiguration *)configuration NS_DESIGNATED_INITIALIZER; //mrp: NS_DESIGNATED_INITIALIZER这个宏，往往是想告诉调用者要用这个方法去初始化（构造）类对象。避免使用new，因为，如果使用new来创建对象的话，即使init被声明为NS_UNAVAILABLE，也不会收到编译器的警告和错误提示了。
 
 ///---------------------------
 /// @name Making HTTP Requests
